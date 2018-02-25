@@ -104,7 +104,7 @@ public class Main extends Loop{
                     if (charges.get(i).getCharge() <= 0 && charges.get(j).getCharge() <= 0) {
                         magnitude *= -1;
                     }
-                    if (charges.get(i).getCharge() >= 0 && charges.get(j).getCharge() >= 0) {
+                    if (charges.get(i).getCharge() >= 0 && charges.get(j).getCharge() <= 0) {
                         magnitude *= -1;
                     }
                     charges.get(j).setAx(magnitude * Math.sin(theta));

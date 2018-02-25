@@ -17,6 +17,8 @@ public class Charge {
     private double ax, ay;
     private double charge;
     
+    public static final double vmax=2;
+    
     private double radius;
     
     public Charge(double x, double y, double charge){
@@ -40,6 +42,12 @@ public class Charge {
             vy *= -1;
         }
         
+        if(vx > vmax){
+            vx = vmax;
+        }
+        if(vy > vmax){
+            vx = vmax;
+        }
         
         oldvx = vx;
         oldvy = vy;
