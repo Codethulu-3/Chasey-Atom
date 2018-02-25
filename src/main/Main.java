@@ -26,10 +26,9 @@ public class Main extends Loop{
     public static double k = 8987552787.37;
     public static double e = -1.60217662 * Math.pow(10,-19);
     public static double mass = 9.10938356 * Math.pow(10,-31);
-    private ArrayList<Charge> electrons = new ArrayList();
+    private ArrayList<Charge> charges = new ArrayList();
     private long lastSpawn, spawnTimer = lastSpawn, spawnCooldown=2000;
-    private ArrayList<Charge> protons = new ArrayList();
-    private long lastpSpawn, pspawnTimer = lastpSpawn, pspawnCooldown=6000;
+    private int iter=0;
     
     private Player player;
     private double score = 0;
@@ -41,7 +40,7 @@ public class Main extends Loop{
         display = new Display("Chasey Atom", width, height);
         
         for(int i = 0; i < 2; i++){
-            electrons.add(new Charge(Math.random() * 1080, Math.random()* 720, e));
+            charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e));
         }
         
         player = new Player();
@@ -90,58 +89,54 @@ public class Main extends Loop{
     }
     
     private void game(){
-        for (int i = 0; i < electrons.size(); i++) {
-            for (int j = 0; j < electrons.size(); j++) {
+        for (int i = 0; i < charges.size(); i++) {
+            for (int j = 0; j < charges.size(); j++) {
                 if (j != i) {
-                    double d = Math.sqrt(Math.pow(electrons.get(i).getX() - electrons.get(j).getX(), 2)
-                            + Math.pow(electrons.get(i).getY() - electrons.get(j).getY(), 2));
-                    double theta = Math.atan2(electrons.get(i).getX() - electrons.get(j).getX(),
-                            electrons.get(i).getY() - electrons.get(j).getY());
+                    double d = Math.sqrt(Math.pow(charges.get(i).getX() - charges.get(j).getX(), 2)
+                            + Math.pow(charges.get(i).getY() - charges.get(j).getY(), 2));
+                    double theta = Math.atan2(charges.get(i).getX() - charges.get(j).getX(),
+                            charges.get(i).getY() - charges.get(j).getY());
                     if (theta < 0) {
                         theta += 2 * Math.PI;
                     }
-                    double magnitude = (k * electrons.get(i).getCharge()
-                            * electrons.get(j).getCharge()) / (Math.pow(d, 2) * mass);
-                    if (electrons.get(i).getCharge() <= 0 && electrons.get(j).getCharge() <= 0) {
+                    double magnitude = (k * charges.get(i).getCharge()
+                            * charges.get(j).getCharge()) / (Math.pow(d, 2) * mass);
+                    if (charges.get(i).getCharge() <= 0 && charges.get(j).getCharge() <= 0) {
                         magnitude *= -1;
                     }
-                    if (electrons.get(i).getCharge() >= 0 && electrons.get(j).getCharge() >= 0) {
+                    if (charges.get(i).getCharge() >= 0 && charges.get(j).getCharge() >= 0) {
                         magnitude *= -1;
                     }
-                    electrons.get(j).setAx(magnitude * Math.sin(theta));
-                    electrons.get(j).setAy(magnitude * Math.cos(theta));
+                    charges.get(j).setAx(magnitude * Math.sin(theta));
+                    charges.get(j).setAy(magnitude * Math.cos(theta));
                 }
             }
         }
-        for (Charge c : electrons) {
+        for (Charge c : charges) {
             c.update();
         }
 
         spawnTimer += System.currentTimeMillis() - lastSpawn;
         lastSpawn = System.currentTimeMillis();
         if (spawnTimer > spawnCooldown) {
-            electrons.add(new Charge(Math.random() * 1080, Math.random() * 720, e));
+            charges.add(new Charge(Math.random() * 1080, Math.random() * 720, e));
+            iter++;
+            if(iter>=3){
+                iter=0;
+                charges.add(new Charge(Math.random() * 1080, Math.random() * 720, -e));
+            }
             spawnTimer = 0;
         }
         
-        for(int i = 0; i < electrons.size(); i++){
-            if(player.collision(electrons.get(i).getX(), electrons.get(i).getY(), electrons.get(i).getRadius())){
-                state=2;
-            }
-        }
-        
-        pspawnTimer += System.currentTimeMillis() - lastpSpawn;
-        lastpSpawn = System.currentTimeMillis();
-        if (pspawnTimer > pspawnCooldown) {
-            protons.add(new Charge(Math.random() * 1080, Math.random() * 720, -e));
-            pspawnTimer = 0;
-        }
-        
-        for(int i = 0; i < protons.size(); i++){
-            if(player.collision(protons.get(i).getX(), protons.get(i).getY(), protons.get(i).getRadius())){
-                score+=50;
-                protons.remove(i);
-                electrons.remove(0);
+        for(int i = 0; i < charges.size(); i++){
+            if(player.collision(charges.get(i).getX(), charges.get(i).getY(), charges.get(i).getRadius())){
+                if(charges.get(i).getCharge()<0){
+                    state=2;
+                } else {
+                    score+=50;
+                    charges.remove(i);
+                    charges.remove(0);
+                }
             }
         }
         
@@ -153,9 +148,9 @@ public class Main extends Loop{
         endButton.update((int)player.getMouseX(), (int)player.getMouseY());
         
         if(replayButton.click(player.getLeftPressed())){
-            electrons.removeAll(electrons);
+            charges.removeAll(charges);
             for(int i = 0; i < 2; i++){
-                electrons.add(new Charge(Math.random() * 1080, Math.random()* 720, e));
+                charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e));
             }
             score=0;
             state=1;
@@ -210,14 +205,9 @@ public class Main extends Loop{
     }
     
     private void drawGame(Graphics g){
-        for(Charge c: electrons){
+        for(Charge c: charges){
             c.render(g);
         }
-        
-        for(Charge c: protons){
-            c.render(g);
-        }
-        
         
         player.render(g);
         
