@@ -23,7 +23,7 @@ public class Charge {
         this.x = x;
         this.y = y;
         this.charge = charge;
-        radius = Math.abs(100000 * charge);
+        radius = 10;
     }
     
     public void update(){
@@ -51,7 +51,7 @@ public class Charge {
         } else {
             g.setColor(Color.blue);
         }
-        g.fillOval((int)x, (int)y, (int)radius, (int)radius);
+        g.fillOval((int)x, (int)y, (int)10, (int)10);
     }
     
     //getters and setters

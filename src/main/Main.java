@@ -24,7 +24,8 @@ public class Main extends Loop{
     private Button replayButton;
     
     public static double k = 8987552787.37;
-    public static double e = -1.60217662 * Math.pow(10,-4);
+    public static double e = -1.60217662 * Math.pow(10,-19);
+    public static double mass = 9.10938356 * Math.pow(10,-31);
     private ArrayList<Charge> electrons = new ArrayList();
     private long lastSpawn, spawnTimer = lastSpawn, spawnCooldown=2000;
     private ArrayList<Charge> protons = new ArrayList();
@@ -100,7 +101,7 @@ public class Main extends Loop{
                         theta += 2 * Math.PI;
                     }
                     double magnitude = (k * electrons.get(i).getCharge()
-                            * electrons.get(j).getCharge()) / Math.pow(d, 2);
+                            * electrons.get(j).getCharge()) / (Math.pow(d, 2) * mass);
                     if (electrons.get(i).getCharge() <= 0 && electrons.get(j).getCharge() <= 0) {
                         magnitude *= -1;
                     }
