@@ -41,7 +41,7 @@ public class Main extends Loop{
         display = new Display("Chasey Atom", width, height);
         
         for(int i = 0; i < 2; i++){
-            charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e, masse));
+            charges.add(new Charge(Math.random() * 1070, Math.random()* 710, e, masse));
         }
         
         player = new Player();
@@ -129,11 +129,11 @@ public class Main extends Loop{
         spawnTimer += System.currentTimeMillis() - lastSpawn;
         lastSpawn = System.currentTimeMillis();
         if (spawnTimer > spawnCooldown) {
-            charges.add(new Charge(Math.random() * 1080, Math.random() * 720, e, masse));
+            charges.add(new Charge(Math.random() * 1070, Math.random() * 710, e, masse));
             iter++;
             if(iter>=3){
                 iter=0;
-                charges.add(new Charge(Math.random() * 1080, Math.random() * 720, -e, massp));
+                charges.add(new Charge(Math.random() * 1070, Math.random() * 710, -e, massp));
             }
             spawnTimer = 0;
         }
@@ -143,7 +143,7 @@ public class Main extends Loop{
                 if(charges.get(i).getCharge()<0){
                     state=2;
                 } else {
-                    score+=50;
+                    score+=100;
                     charges.remove(i);
                     charges.remove(0);
                 }
@@ -160,7 +160,7 @@ public class Main extends Loop{
         if(replayButton.click(player.getLeftPressed())){
             charges.removeAll(charges);
             for(int i = 0; i < 2; i++){
-                charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e, masse));
+                charges.add(new Charge(Math.random() * 1070, Math.random()* 710, e, masse));
             }
             score=0;
             state=1;
@@ -215,7 +215,7 @@ public class Main extends Loop{
         
         g.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
         g.setColor(Color.white);
-        g.drawString("Version: Alpha 2.0", 0,12);
+        g.drawString("V. Alpha 2.0", 0,12);
     }
     
     private void drawGame(Graphics g){
