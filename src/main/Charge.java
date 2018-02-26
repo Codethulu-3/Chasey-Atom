@@ -16,29 +16,31 @@ public class Charge {
     private double oldvx, oldvy;
     private double ax, ay;
     private double charge;
+    private double mass;
     
-    public static final double vmax=2;
+    public static final double vmax=1;
     
     private double radius;
     
-    public Charge(double x, double y, double charge){
+    public Charge(double x, double y, double charge, double mass){
         this.x = x;
         this.y = y;
         this.charge = charge;
+        this.mass = mass;
         radius = 10;
     }
     
     public void update(){
-        vx = oldvx + (ax/2);
-        vy = oldvy + (ay/2);
+        vx = oldvx + (ax);
+        vy = oldvy + (ay);
         
         x+=vx;
         y+=vy;
         
-        if(x<=0 || x>= Main.width){
+        if(x<=0 || x>= Main.width - radius){
             vx *= -1;
         }
-        if(y<=0 || y>= Main.height){
+        if(y<=0 || y>= Main.height - radius){
             vy *= -1;
         }
         
@@ -46,11 +48,24 @@ public class Charge {
             vx = vmax;
         }
         if(vy > vmax){
-            vx = vmax;
+            vy = vmax;
+        }
+        if(vx<-vmax){
+            vx = -vmax;
+        }
+        if(vy<-vmax){
+            vy = -vmax;
         }
         
         oldvx = vx;
         oldvy = vy;
+    }
+    
+    public boolean collision(double x2, double y2, double radius2){
+        double xDif = (x-radius/2) - (x2-radius2/2);
+        double yDif = (y-radius/2) - (y2-radius2/2);
+        double distanceSquared = xDif * xDif + yDif * yDif;
+        return distanceSquared < (radius/2 + radius2/2) * (radius/2 + radius2/2);
     }
     
     public void render(Graphics g){
@@ -70,5 +85,10 @@ public class Charge {
     public double getY(){return y;}
     public void setX(double x){this.x = x;}
     public void setY(double y){this.y = y;}
+    public double getVX(){return vx;}
+    public double getVY(){return vy;}
+    public void setVX(double vx){this.vx = vx;}
+    public void setVY(double vy){this.vy = vy;}
     public double getRadius(){return radius;}
+    public double getMass(){return mass;}
 }

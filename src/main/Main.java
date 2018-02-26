@@ -25,7 +25,8 @@ public class Main extends Loop{
     
     public static double k = 8987552787.37;
     public static double e = -1.60217662 * Math.pow(10,-19);
-    public static double mass = 9.10938356 * Math.pow(10,-31);
+    public static double masse = 9.10938356 * Math.pow(10,-31);
+    public static double massp = 1.6726219 * Math.pow(10, -27);
     private ArrayList<Charge> charges = new ArrayList();
     private long lastSpawn, spawnTimer = lastSpawn, spawnCooldown=2000;
     private int iter=0;
@@ -40,7 +41,7 @@ public class Main extends Loop{
         display = new Display("Chasey Atom", width, height);
         
         for(int i = 0; i < 2; i++){
-            charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e));
+            charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e, masse));
         }
         
         player = new Player();
@@ -99,16 +100,25 @@ public class Main extends Loop{
                     if (theta < 0) {
                         theta += 2 * Math.PI;
                     }
-                    double magnitude = (k * charges.get(i).getCharge()
-                            * charges.get(j).getCharge()) / (Math.pow(d, 2) * mass);
+                    double magnitude = (k * Math.abs(charges.get(i).getCharge())
+                            * Math.abs(charges.get(j).getCharge())) / (Math.pow(d, 2) * charges.get(i).getMass());
                     if (charges.get(i).getCharge() <= 0 && charges.get(j).getCharge() <= 0) {
                         magnitude *= -1;
                     }
-                    if (charges.get(i).getCharge() >= 0 && charges.get(j).getCharge() <= 0) {
+                    if (charges.get(i).getCharge() >= 0 && charges.get(j).getCharge() >= 0) {
                         magnitude *= -1;
                     }
                     charges.get(j).setAx(magnitude * Math.sin(theta));
                     charges.get(j).setAy(magnitude * Math.cos(theta));
+                    if(charges.get(j).collision(charges.get(i).getX(), charges.get(i).getY(), charges.get(i).getRadius())){
+                        if(charges.get(i).getCharge()!=charges.get(j).getCharge()){
+                            if(charges.get(i).getCharge()>0){
+                                charges.remove(i);
+                            } else {
+                                charges.remove(j);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -119,11 +129,11 @@ public class Main extends Loop{
         spawnTimer += System.currentTimeMillis() - lastSpawn;
         lastSpawn = System.currentTimeMillis();
         if (spawnTimer > spawnCooldown) {
-            charges.add(new Charge(Math.random() * 1080, Math.random() * 720, e));
+            charges.add(new Charge(Math.random() * 1080, Math.random() * 720, e, masse));
             iter++;
             if(iter>=3){
                 iter=0;
-                charges.add(new Charge(Math.random() * 1080, Math.random() * 720, -e));
+                charges.add(new Charge(Math.random() * 1080, Math.random() * 720, -e, massp));
             }
             spawnTimer = 0;
         }
@@ -150,7 +160,7 @@ public class Main extends Loop{
         if(replayButton.click(player.getLeftPressed())){
             charges.removeAll(charges);
             for(int i = 0; i < 2; i++){
-                charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e));
+                charges.add(new Charge(Math.random() * 1080, Math.random()* 720, e, masse));
             }
             score=0;
             state=1;
@@ -202,6 +212,10 @@ public class Main extends Loop{
         g.setColor(Color.white);
         g.drawString(startButton.getText(), (width/2) - (g.getFontMetrics().stringWidth(startButton.getText()) / 2), (height/3 + 32));
         g.drawString(endButton.getText(), (width/2) - (g.getFontMetrics().stringWidth(endButton.getText()) / 2), (height/2 + 32));
+        
+        g.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+        g.setColor(Color.white);
+        g.drawString("Version: Alpha 2.0", 0,12);
     }
     
     private void drawGame(Graphics g){

@@ -22,10 +22,10 @@ public class Player implements MouseMotionListener, MouseListener{
     }
     
     public boolean collision(double x2, double y2, double radius2){
-        double xDif = (x-radius) - (x2-radius2/1.1);
-        double yDif = (y-radius) - (y2-radius2/1.1);
+        double xDif = (x-radius/2) - (x2-radius2/2);
+        double yDif = (y-radius/2) - (y2-radius2/2);
         double distanceSquared = xDif * xDif + yDif * yDif;
-        return distanceSquared < (radius + radius2) * (radius + radius2);
+        return distanceSquared < (radius/2 + radius2/2) * (radius/2 + radius2/2);
     }
     
 
