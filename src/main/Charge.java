@@ -18,7 +18,7 @@ public class Charge {
     private double charge;
     private double mass;
     
-    public static final double vmax=1;
+    public static final double vmax=0.8;
     
     private double radius;
     
@@ -71,8 +71,10 @@ public class Charge {
     public void render(Graphics g){
         if(charge<0){
             g.setColor(Color.yellow);
-        } else {
+        } else if(charge>0){
             g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.gray);
         }
         g.fillOval((int)x, (int)y, (int)10, (int)10);
     }

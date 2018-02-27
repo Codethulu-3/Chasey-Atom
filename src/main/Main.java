@@ -101,7 +101,7 @@ public class Main extends Loop{
                         theta += 2 * Math.PI;
                     }
                     double magnitude = (k * Math.abs(charges.get(i).getCharge())
-                            * Math.abs(charges.get(j).getCharge())) / (Math.pow(d, 2) * charges.get(i).getMass());
+                            * Math.abs(charges.get(j).getCharge())) / (Math.pow(d, 2) * charges.get(j).getMass());
                     if (charges.get(i).getCharge() <= 0 && charges.get(j).getCharge() <= 0) {
                         magnitude *= -1;
                     }
@@ -114,8 +114,8 @@ public class Main extends Loop{
                         if(charges.get(i).getCharge()!=charges.get(j).getCharge()){
                             if(charges.get(i).getCharge()>0){
                                 charges.remove(i);
-                            } else {
-                                charges.remove(j);
+                                //charges.remove(j);
+                                charges.add(new Charge(charges.get(j).getX(), charges.get(j).getY(), 0, masse));
                             }
                         }
                     }
@@ -142,10 +142,13 @@ public class Main extends Loop{
             if(player.collision(charges.get(i).getX(), charges.get(i).getY(), charges.get(i).getRadius())){
                 if(charges.get(i).getCharge()<0){
                     state=2;
-                } else {
+                } else if(charges.get(i).getCharge()>0){
                     score+=100;
                     charges.remove(i);
                     charges.remove(0);
+                } else {
+                    score+=20;
+                    charges.remove(i);
                 }
             }
         }
@@ -215,7 +218,7 @@ public class Main extends Loop{
         
         g.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
         g.setColor(Color.white);
-        g.drawString("V. Alpha 2.0", 0,12);
+        g.drawString("V. Alpha 2.1", 0,12);
     }
     
     private void drawGame(Graphics g){
@@ -236,7 +239,7 @@ public class Main extends Loop{
         
         g.setFont(new Font("Comic Sans MS", Font.BOLD, 32));
         g.setColor(Color.yellow);
-        g.drawString("Ur Bad Lol", (width/2) - (g.getFontMetrics().stringWidth("Chasey Atom") / 2), (height/4) - 32);
+        g.drawString("Ur Bad Lol", (width/2) - (g.getFontMetrics().stringWidth("Ur Bad Lol") / 2), (height/4) - 32);
         
         g.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
         g.setColor(Color.white);
@@ -245,6 +248,6 @@ public class Main extends Loop{
         
         g.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
         g.setColor(Color.white);
-        g.drawString(("Score: " + Integer.toString((int)score)), 0,18);
+        g.drawString("Score: " + (int)score, (width/2) - (g.getFontMetrics().stringWidth("Score: 999") / 2), (((height/4) + height/3)/2)-16);
     }
 }
