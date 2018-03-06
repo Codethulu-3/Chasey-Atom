@@ -1,4 +1,4 @@
-package main;
+package maze;
 
 import java.awt.Canvas;
 import java.awt.Dimension;

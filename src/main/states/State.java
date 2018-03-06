@@ -1,7 +1,7 @@
-package main.states;
+package maze.states;
 
 import java.awt.Graphics;
-import main.Main;
+import maze.Main;
 
 /**
  *
@@ -11,13 +11,19 @@ public abstract class State {
     
     private static State currentState = null;
     
+    private static State lastState = null;
+    
     public static void setState(State state) {
-        currentState = state;
+        lastState = currentState;
+    	currentState = state;
         currentState.reloadState();
     }
 
     public static State getState() {
         return currentState;
+    }
+    public static State getLastState() {
+    	return lastState;
     }
     
     //Class

@@ -1,4 +1,4 @@
-package main;
+package maze;
 /**
  *
  * @author asilence24
